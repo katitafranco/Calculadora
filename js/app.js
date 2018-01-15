@@ -8,15 +8,20 @@ var Calculadora={
 
   init: function(){
     var self = this;
-    for (var i = 0; i < 10; i++) {
-      agregarEventos(document.getElementById(i));
+    for (var i = 0; i < 11; i++) {
+
+      if (i==10){
+        agregarEventos(document.getElementById("punto"));
+      }
+      else{
+        agregarEventos(document.getElementById(i));
+      }
     };
     agregaEventosOperadores(document.getElementById("mas"));
     agregaEventosOperadores(document.getElementById("menos"));
     agregaEventosOperadores(document.getElementById("por"));
     agregaEventosOperadores(document.getElementById("dividido"));
     agregaEventosOperadores(document.getElementById("sign"));
-    agregaEventosOperadores(document.getElementById("punto"));
     agregaEventosOperadores(document.getElementById("igual"));
     agregaEventosOperadores(document.getElementById("on"));
 
@@ -52,11 +57,18 @@ var Calculadora={
       var cadena = display.innerText;
       var anteriorNumero = parseFloat(display.innerText);
       var anteriorDigito = parseFloat(display.innerText);
-      if (cadena==0)
+      if (cadena=="0" && n!="punto")
       {
         display.innerText = n;
         anteriorTecla=n;
-      }else {
+      }else if (cadena==0 && n=="punto") {
+        display.innerText = "0."
+      }else if(cadena!=0 && n=="punto"){
+        if(this.verificaLength(cadena)){
+            this.agregarPunto();
+          }
+      }
+      else {
         if(this.verificaLength(cadena)){
           display.innerText = cadena + n;
           anteriorTecla=n;
@@ -105,6 +117,16 @@ var Calculadora={
       {return true;}
       else {
         return false;}
+    },
+    agregarPunto: function(){
+      var cadena = display.innerText;
+      var punto = cadena.indexOf(".")
+      if (punto == -1){
+        display.innerText= cadena+".";
+      }else {
+        return;
+      }
+
     }
 }
 Calculadora.init();
