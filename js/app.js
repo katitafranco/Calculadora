@@ -67,7 +67,7 @@ var Calculadora={
       var numero = parseFloat(display.innerText);
       switch (n) {
         case "on":
-          encerarDisplay;
+          this.encerarDisplay();
           break;
         case "mas":
           display.innerText =""
@@ -84,7 +84,7 @@ var Calculadora={
           break;
 
         case "sign":
-          modificarSignoNumero()
+          this.modificarSigno()
           break;
 
       }
@@ -93,10 +93,12 @@ var Calculadora={
     encerarDisplay: function(){
       display.innerText="0";
       anteriorTecla="";
+      anteriorNumero=0
       anteriorDigito=0;
     },
-    modificarSignoNumero: function(){
+    modificarSigno: function(){
         var a = parseFloat(display.innerText)*-1;
+        display.innerText=a;
     },
     verificaLength: function(cadena){
       if (cadena.length<8)
