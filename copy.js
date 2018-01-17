@@ -83,30 +83,61 @@ var Calculadora={
       // se vacia el display y se asigna el ultimo operador cuando el objeto display tiene un numero y
       // cuando se envia un operador aritmeticos
           var operando = parseFloat(display.innerText);
-                if (n== "on"){
-                      this.encerarDisplay();
-                  }
-                else if( n == "mas" || n == "menos" || n == "por" || n == "dividido" || n == "igual"){
-                      var result = this.realizarCalculosAritmeticos(operando,n);
-                      if(n=="igual")
-                      {
-                          resultString = String(result);
-                          display.innerText = (resultString.length < 9 ? result : resultString.substring(0,7));
-                          // total = result;
-                      }else { // vacia el display esperando el siguiente numero para la operacion
-                        display.innerText = ""; operador = n; // asigna el ultimo operador para utilizarlo en caso de secuencia
-                        repiteSecuencia = false; // no es secuencia de operaciones
-                      }
-                }
-                else if(n=="sign"){
-                      this.modificarSigno()
-                }
 
+              switch (n)
+              {
+                case "on":
+                  this.encerarDisplay();
+                  break;
+                case ( operando!="" &&( n == "mas" || n == "menos" || n == "por" || n == "dividido")):
+                      switch (operador) {
+                        case "mas":
+                          total = total + operando;
+                          break;
+                        case "menos":
+                          // total = total - operando;
+                          if(total!=0){
+                            total = total - operando;
+                          }else{
+                            total = operando;}
+                          break;
+                        case "por":
+                          if(total!=0){
+                            total = total * operando;
+                          }else{
+                            total = operando;
+                          }
+                          break;
+                        case "dividido":
+                          // total = total / operando;
+                          if(total!=0){
+                            total = total / operando;
+                          }else{
+                            total = operando;}
+                          break;
+                      }
+                      anteriorNumero = operando; // asigna el ultimo numero para utilizarlo en caso de secuencia
+                      display.innerText = ""; // vacia el display esperando el siguiente numero para la operacion
+                      operador = n; // asigna el ultimo operador para utilizarlo en caso de secuencia
+                      repiteSecuencia = false; // no es secuencia de operaciones
+                case "igual":
+                  var result = this.realizarCalculosAritmeticos(operando);
+                  resultString = String(result);
+                  display.innerText = (resultString.length < 9 ? result : resultString.substring(0,7));
+                  total = result;
+                  break;
+
+                case "sign":
+                  this.modificarSigno()
+                  break;
+              }
+            }
     },
-    realizarCalculosAritmeticos: function(operandoActual,tecla){
+
+    realizarCalculosAritmeticos: function(operandoActual){
+
       if(repiteSecuencia == true)
       {
-        if(tecla=="igual"){
             switch (operador) {
               case "mas":
                 total = total + parseFloat(anteriorNumero);
@@ -121,40 +152,29 @@ var Calculadora={
                 total = total / parseFloat(anteriorNumero);
                 break;
             }
-          }
       }
       else
       {
-          if(operador !="")// && anteriorNumero!=0)
-          {
-            if(total==0)
-            {
-              total = operandoActual
-            }else
-            {
-                switch (operador) {
-                  case "mas":
-                    total = parseFloat(total) +  operandoActual ;
-                    break;
-                  case "menos":
-                      total = parseFloat(total) - operandoActual;
-                    break;
-                  case "por":
-                      total = parseFloat(total) * operandoActual;
-                    break;
-                  case "dividido":
-                      total = parseFloat(total) / operandoActual;
-                    break;
-                }
-            }
-            repiteSecuencia = true;
-            anteriorNumero = operandoActual;
+        if(operador !="" && anteriorNumero!=0)
+        {
+          switch (operador) {
+            case "mas":
+              total = parseFloat(total)+  operandoActual ;
+              break;
+            case "menos":
+              total = parseFloat(total) - operandoActual;
+              break;
+            case "por":
+              total = parseFloat(total) * operandoActual ;
+              break;
+            case "dividido":
+              total = parseFloat(total) / operandoActual;
+              break;
           }
-          else {
-            total = operandoActual;
-          }
-        }
-        return total;
+          repiteSecuencia = true;
+          anteriorNumero = operandoActual;// asigna el ultimo numero para utilizarlo en caso de secuencia
+      }
+      return total;
     },
     encerarDisplay: function(){
       display.innerText="0";
@@ -169,11 +189,6 @@ var Calculadora={
     },
     modificarSigno: function(){
         var a = parseFloat(display.innerText)*-1;
-
-        if(parseFloat(display.innerText)==total)
-        {
-            total = total*-1;
-        }
         display.innerText=a;
     },
     verificaLength: function(cadena){
