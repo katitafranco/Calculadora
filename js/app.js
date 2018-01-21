@@ -6,13 +6,11 @@ var operadorSecuencial ="";
 //se activa cuando la tecla oprimida es "=" y se desactiva cuando se acciona una tecla de operadores aritmeticos y el "ON"
 var repiteSecuencia=true;
 
-
 var Calculadora={
   init: function(){
     this.encerarDisplay();
     var self = this;
     for (var i = 0; i < 11; i++) {
-
       if (i==10){
         agregarEventos(document.getElementById("punto"));
       }
@@ -32,28 +30,25 @@ var Calculadora={
         boton.addEventListener("click",function(){
             self.concatenaDigitos(boton.id,document.getElementById("display"))
         });
-        boton.addEventListener("mousedown", function(){
-            boton.setAttribute("style","transform:scale(0.90,0.90)")
-        });
-        boton.addEventListener("mouseup", function(){
-            boton.setAttribute("style","transform:scale(1,1)")
-        });
-
+          self.agregaAnimacion(boton);
     };
     function agregaEventosOperadores(boton){
       boton.addEventListener("click",function(){
-          self.calcular2(boton.id,document.getElementById("display"))
+          self.realizaOperaciones(boton.id,document.getElementById("display"))
       });
-        boton.addEventListener("mousedown", function(){
-            boton.setAttribute("style","transform:scale(0.90,0.90)")
-        });
-        boton.addEventListener("mouseup", function(){
-            boton.setAttribute("style","transform:scale(1,1)")
-        });
-
+      self.agregaAnimacion(boton);
     };
   },
-      concatenaDigitos: function(n, display){
+    agregaAnimacion: function(boton)
+    {
+      boton.addEventListener("mousedown", function(){
+          boton.setAttribute("style","transform:scale(0.90,0.90)")
+      });
+      boton.addEventListener("mouseup", function(){
+          boton.setAttribute("style","transform:scale(1,1)")
+      });
+    },
+    concatenaDigitos: function(n, display){
       var cadena = display.innerText;
       // var anteriorNumero = parseFloat(display.innerText);
       if (cadena=="0" && n!="punto")
@@ -74,7 +69,7 @@ var Calculadora={
           display.innerText = this.verificaLongitudCadena(cadena + n);
       }
     },
-    calcular2: function(n,display){
+    realizaOperaciones: function(n,display){
       // se vacia el display y se asigna el ultimo operador cuando el objeto display tiene un numero y
       // cuando se envia un operador aritmeticos
           var operando = parseFloat(display.innerText);
@@ -119,7 +114,7 @@ var Calculadora={
       }
       else
       {
-          if(operador !="")// && anteriorNumero!=0)
+          if(operador !="")
           {
             if(total==0)
             {
