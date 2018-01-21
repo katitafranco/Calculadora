@@ -1,4 +1,3 @@
-// var display = document.getElementById('display');
 var anteriorNumero =0
 var operador = "";
 var total = 0;
@@ -10,6 +9,7 @@ var repiteSecuencia=true;
 
 var Calculadora={
   init: function(){
+    this.encerarDisplay();
     var self = this;
     for (var i = 0; i < 11; i++) {
 
@@ -66,17 +66,12 @@ var Calculadora={
       }
       else if(cadena!=0 && n=="punto")
       {
-          if(this.verificaLength(cadena))
-          {
-              this.agregarPunto();
-          }
+          this.agregarPunto();
+
       }
       else
       {
-        if(this.verificaLength(cadena))
-        {
-          display.innerText = cadena + n;
-        }
+          display.innerText = this.verificaLongitudCadena(cadena + n);
       }
     },
     calcular2: function(n,display){
@@ -90,9 +85,8 @@ var Calculadora={
                       var result = this.realizarCalculosAritmeticos(operando,n);
                       if(n=="igual")
                       {
-                          resultString = String(result);
-                          display.innerText = (resultString.length < 9 ? result : resultString.substring(0,7));
-                          // total = result;
+                          display.innerText = this.verificaLongitudCadena(result);
+
                       }else { // vacia el display esperando el siguiente numero para la operacion
                         display.innerText = ""; operador = n; // asigna el ultimo operador para utilizarlo en caso de secuencia
                         repiteSecuencia = false; // no es secuencia de operaciones
@@ -157,40 +151,40 @@ var Calculadora={
         return total;
     },
     encerarDisplay: function(){
-      display.innerText="0";
-
-      anteriorNumero =0;
-      operador = "";
-      total = 0;
-      ultimoOperando = 0;
-      operadorSecuencial ="";
-      repiteSecuencia=false;
-
+        display.innerText="0";
+        anteriorNumero =0;
+        operador = "";
+        total = 0;
+        ultimoOperando = 0;
+        operadorSecuencial ="";
+        repiteSecuencia=false;
     },
     modificarSigno: function(){
-        var a = parseFloat(display.innerText)*-1;
-
-        if(parseFloat(display.innerText)==total)
+         var a = parseFloat(display.innerText)*-1;
+        //
+        if(parseFloat(display.innerText)==String(total).substring(0,8)||
+            parseFloat(display.innerText)==String(total).substring(0,9))
         {
             total = total*-1;
+            display.innerText = this.verificaLongitudCadena(total);
+        }else {
+          display.innerText= this.verificaLongitudCadena(a);
         }
-        display.innerText=a;
+
     },
-    verificaLength: function(cadena){
-      if (cadena.length<8)
-      {return true;}
-      else {
-        return false;}
+    verificaLongitudCadena: function(cadena){
+      var resultString = String(cadena);
+      return (resultString.length < 9 ? resultString : resultString.substring(0,8));
+
     },
     agregarPunto: function(){
       var cadena = display.innerText;
       var punto = cadena.indexOf(".")
       if (punto == -1){
-        display.innerText= cadena+".";
+        display.innerText= this.verificaLongitudCadena(cadena+".");
       }else {
         return;
       }
-
     }
 }
 Calculadora.init();
